@@ -5,7 +5,7 @@ ARG APP_PATH='/app'
 ENV PORT=3000
 ENV RAILS_ENV 'development'
 
-RUN mkdir $APP_PATH
+RUN mkdir -p $APP_PATH
 WORKDIR $APP_PATH
 COPY . ./
 

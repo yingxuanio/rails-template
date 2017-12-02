@@ -69,8 +69,8 @@ $ rails new myapp -m https://git.io/vbmQA
 #### A 如果你用的是`MacOS`或者`Windows`：
 
 ```
-docker run -it --rm \
-  -v "$PWD":/app -w /app ccr.ccs.tencentyun.com/yingxuan/rails-base:1.1.1 --name myapp bash -c "gem install rails --no-ri --no-rdoc && rails new --skip-bundle myapp -m https://git.io/vbmQA"
+docker run -it -v "$PWD":/app -w /app ccr.ccs.tencentyun.com/yingxuan/rails-base:1.1.1 \
+  --name myapp bash -c "gem install rails --no-ri --no-rdoc && rails new --skip-bundle myapp -m https://git.io/vbmQA"
 ```
 
 #### B 如果你使用的是`Ubuntu`或其他Linux发行版本:

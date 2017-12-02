@@ -42,6 +42,8 @@ if docker_mode
   # Copy Dockerfile and docker-compose to manage docker containers
   get_remote 'Dockerfile'
   get_remote 'docker-compose.yml'
+  gsub_file 'Dockerfile', /\/app/, "/app/#{app_name}"
+  gsub_file 'docker-compose.yml', /\/app/, "/app/#{app_name}"
 end
 
 # postgresql
@@ -56,28 +58,19 @@ say 'Applying figaro...'
 gem 'figaro'
 get_remote('config/application.yml.example', 'config/application.yml')
 
-if docker_mode
-  dir = ask("Specify the location to store database data: (e.g: /data/#{app_name}/db or ~/projects/docker-data/#{app_name}/db)")
-  if dir.blank?
-    say "The location can't be Blank! Will set to '~/projects/docker-data', please remember to modify later!"
-  else
-    gsub_file 'docker-compose.yml', /~\/projects\/docker-data/, "#{dir}"
-  end
-else
-  # host = ask("请输入PostgreSQL数据库host地址（无需输入端口）：(localhost)") || "localhost"
-  # port = ask("请输入PostgreSQL数据库访问端口：(5432)") || "5432"
-  # username = ask("请输入PostgreSQL数据库用户名：(postgres)") || "postgres"
-  # password = ask("请输入PostgreSQL数据库密码：(postgres)") || "postgres"
-  # gsub_file 'config/application.yml', /@postgres/, "@#{host}"
-  # gsub_file 'config/application.yml', /5432/, "#{port}"
-  # gsub_file 'config/application.yml', /yingxuan_devs/, "@#{username}"
-  # gsub_file 'config/application.yml', /yingxuanApp/, "@#{password}"
+# host = ask("请输入PostgreSQL数据库host地址（无需输入端口）：(localhost)") || "localhost"
+# port = ask("请输入PostgreSQL数据库访问端口：(5432)") || "5432"
+# username = ask("请输入PostgreSQL数据库用户名：(postgres)") || "postgres"
+# password = ask("请输入PostgreSQL数据库密码：(postgres)") || "postgres"
+# gsub_file 'config/application.yml', /@postgres/, "@#{host}"
+# gsub_file 'config/application.yml', /5432/, "#{port}"
+# gsub_file 'config/application.yml', /yingxuan_devs/, "@#{username}"
+# gsub_file 'config/application.yml', /yingxuanApp/, "@#{password}"
 
-  # host = ask("请输入Redis数据库host地址（无需输入端口）：(localhost)") || "localhost"
-  # port = ask("请输入Redis数据库访问端口：(6379)") || "6379"
-  # gsub_file 'config/application.yml', /\/\/redis/, "\/\/#{host}"
-  # gsub_file 'config/application.yml', /6379/, "#{port}"
-end
+# host = ask("请输入Redis数据库host地址（无需输入端口）：(localhost)") || "localhost"
+# port = ask("请输入Redis数据库访问端口：(6379)") || "6379"
+# gsub_file 'config/application.yml', /\/\/redis/, "\/\/#{host}"
+# gsub_file 'config/application.yml', /6379/, "#{port}"
 
 get_remote('config/spring.rb')
 
