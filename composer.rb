@@ -61,7 +61,7 @@ if docker_mode
   if dir.blank?
     say "The location can't be Blank! Will set to '~/projects/docker-data', please remember to modify later!"
   else
-    gsub_file 'config/docker-compose.yml', /~\/projects\/docker-data/, "#{dir}"
+    gsub_file 'docker-compose.yml', /~\/projects\/docker-data/, "#{dir}"
   end
 else
   # host = ask("请输入PostgreSQL数据库host地址（无需输入端口）：(localhost)") || "localhost"
