@@ -2,8 +2,6 @@
 FROM ccr.ccs.tencentyun.com/yingxuan/rails-base:1.1.1
 
 ARG APP_PATH='/app'
-ENV PORT=3000
-ENV RAILS_ENV 'development'
 
 RUN mkdir $APP_PATH
 WORKDIR $APP_PATH
@@ -17,8 +15,8 @@ RUN apt-get update -qq && apt-get install -y yarn
 RUN bundle install --jobs 20 --retry 5
 RUN yarn install
 
-EXPOSE $PORT
-CMD ["bundle", "exec", "puma", "-C", "config/puma.rb"]
+EXPOSE 3000
+CMD ["bundle", "exec", "rails", "s", "-b", "0.0.0.0"]
 
 # Metadata
 LABEL org.label-schema.vendor="Ivan@Yingxuan" \
