@@ -20,7 +20,7 @@ remove_comment_of_gem
 # gitignore
 get_remote('gitignore', '.gitignore')
 
-environment "config.cache_store = :redis_store, ENV['CACHE_URL'],{ namespace: '#{app_name}'::cache' }"
+environment "config.cache_store = :redis_store, ENV['CACHE_URL'],{ namespace: '#{app_name}::cache' }"
 environment 'config.active_job.queue_adapter = :sidekiq'
 
 # postgresql
@@ -28,13 +28,7 @@ say 'Applying postgresql...'
 remove_gem('sqlite3')
 gem 'pg'
 get_remote('config/database.yml.example')
-gsub_file "config/database.yml.example", /database: myapp_development/, "database: #{app_name}_development"
-gsub_file "config/database.yml.example", /database: myapp_test/, "database: #{app_name}_test"
-gsub_file "config/database.yml.example", /database: myapp_production/, "database: #{app_name}_production"
 get_remote('config/database.yml.example', 'config/database.yml')
-gsub_file "config/database.yml", /database: myapp_development/, "database: #{app_name}_development"
-gsub_file "config/database.yml", /database: myapp_test/, "database: #{app_name}_test"
-gsub_file "config/database.yml", /database: myapp_production/, "database: #{app_name}_production"
 
 # environment variables set
 say 'Applying figaro...'
@@ -183,6 +177,5 @@ get_remote 'ackrc', '.ackrc'
 gsub_file 'Gemfile', /rubygems.org/, "gems.ruby-china.org"
 
 after_bundle do
-  git :init
   say "Build successfully! `cd #{app_name}` and use `docker-compose up` to start your rails app..."
 end
