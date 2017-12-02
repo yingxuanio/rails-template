@@ -14,10 +14,13 @@ UPYUN_BUCKET_HOST: ''
 # sidekiq namespace
 JOB_WORKER_URL: 'redis://redis:6379/0'
 
-DATABASE_URL: postgresql://yingxuan_devs:yingxuanApp@postgres:5432/drkiq?encoding=utf8&pool=5&timeout=5000
+DATABASE_URL: postgresql://yingxuan_devs:yingxuanApp@postgres:5432/myapp?encoding=utf8&pool=5&timeout=5000
 
 WEB_CONCURRENCY: ''
 RAILS_MIN_THREADS: ''
 RAILS_MAX_THREADS: ''
 RAILS_ENV: ''
 PORT: ''
+
+CACHE_URL=redis://redis:6379/0
+JOB_WORKER_URL=redis://redis:6379/0

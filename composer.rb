@@ -16,25 +16,69 @@ def get_remote(src, dest = nil)
   get(remote_file, dest)
 end
 
+docker_mode = yes?("是否启用『Docker模式』创建Rails项目？否则将使用『本地模式』。")
+if docker_mode
+  say "启用Docker模式进行安装……"
+else
+  say "启用本地模式进行安装……"
+  say "请确认本地是否已经安装PostgreSQL、redis、NodeJS等依赖，如未安装将有可能失败。"
+end
+
 remove_comment_of_gem
 # gitignore
 get_remote('gitignore', '.gitignore')
 
+say "updating config/applicatoin.rb"
+environment 'config.generators.assets = false'
+environment 'config.generators.helper = false'
+environment 'config.generators { |g| g.test_framework :rspec }'
+environment "config.time_zone = 'Beijing'"
+environment "config.i18n.available_locales = [:en, :'zh-CN']"
+environment "config.i18n.default_locale = :'zh-CN'"
+environment "config.lograge.enabled = true"
 environment "config.cache_store = :redis_store, ENV['CACHE_URL'],{ namespace: '#{app_name}::cache' }"
-environment 'config.active_job.queue_adapter = :sidekiq'
+
+if docker_mode
+  # Copy Dockerfile and docker-compose to manage docker containers
+  get_remote 'Dockerfile'
+  get_remote 'docker-compose.yml'
+end
 
 # postgresql
 say 'Applying postgresql...'
 remove_gem('sqlite3')
 gem 'pg'
-get_remote('config/database.yml.example')
 get_remote('config/database.yml.example', 'config/database.yml')
+
 
 # environment variables set
 say 'Applying figaro...'
 gem 'figaro'
-get_remote('config/application.yml.example')
 get_remote('config/application.yml.example', 'config/application.yml')
+
+if docker_mode
+  dir = ask("Specify the location to store database data: (e.g: /data/#{app_name}/db or /home/username/data/#{app_name}/db)")
+  if dir.blank?
+    say "The location can't be Blank! Will set to '~/projects/docker-data', please remember to modify later!"
+  else
+    gsub_file 'config/docker-compose.yml', /~\/projects\/docker-data/, dir
+  end
+else
+  # host = ask("请输入PostgreSQL数据库host地址（无需输入端口）：(localhost)") || "localhost"
+  # port = ask("请输入PostgreSQL数据库访问端口：(5432)") || "5432"
+  # username = ask("请输入PostgreSQL数据库用户名：(postgres)") || "postgres"
+  # password = ask("请输入PostgreSQL数据库密码：(postgres)") || "postgres"
+  # gsub_file 'config/application.yml', /@postgres/, "@#{host}"
+  # gsub_file 'config/application.yml', /5432/, "#{port}"
+  # gsub_file 'config/application.yml', /yingxuan_devs/, "@#{username}"
+  # gsub_file 'config/application.yml', /yingxuanApp/, "@#{password}"
+
+  # host = ask("请输入Redis数据库host地址（无需输入端口）：(localhost)") || "localhost"
+  # port = ask("请输入Redis数据库访问端口：(6379)") || "6379"
+  # gsub_file 'config/application.yml', /\/\/redis/, "\/\/#{host}"
+  # gsub_file 'config/application.yml', /6379/, "#{port}"
+end
+
 get_remote('config/spring.rb')
 
 after_bundle do
@@ -138,17 +182,6 @@ gsub_file 'config/backup.rb.example', /myapp/, "#{app_name}"
 
 say 'Applying lograge & basic application config...'
 gem 'lograge'
-inject_into_file 'config/application.rb', after: "class Application < Rails::Application\n" do <<-EOF
-    config.generators.assets = false
-    config.generators.helper = false
-
-    config.time_zone = 'Beijing'
-    config.i18n.available_locales = [:en, :'zh-CN']
-    config.i18n.default_locale = :'zh-CN'
-
-    config.lograge.enabled = true
-EOF
-end
 
 say 'Applying rspec test framework...'
 gem_group :development, :test do
@@ -161,13 +194,6 @@ gem_group :test do
   gem 'launchy'
   gem 'selenium-webdriver'
 end
-after_bundle do
-  generate 'testing:configure', 'rspec --force'
-end
-
-# Copy Dockerfile and docker-compose to manage docker containers
-get_remote 'Dockerfile'
-get_remote 'docker-compose.yml'
 
 get_remote 'README.md'
 gsub_file 'README.md', /myapp/, "#{app_name}"
@@ -177,5 +203,6 @@ get_remote 'ackrc', '.ackrc'
 gsub_file 'Gemfile', /rubygems.org/, "gems.ruby-china.org"
 
 after_bundle do
+  say "Please edit `application.yml` first"
   say "Build successfully! `cd #{app_name}` and use `docker-compose up` to start your rails app..."
 end

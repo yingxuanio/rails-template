@@ -7,7 +7,7 @@ postgres:
     - '5432:5432'
   volumes:
     # You need to modify this to a local valid path.
-    - /data/pq_db/data:/var/lib/postgresql/data
+    - ~/projects/docker-data/postresql:/var/lib/postgresql
 
 redis:
   image: redis:3.0.5
@@ -28,7 +28,7 @@ app:
     - '3000:3000'
   environment:
     WEB_CONCURRENCY: 1
-    DATABASE_URL: postgresql://yingxuan_devs:yingxuanApp@postgres:5432/drkiq?encoding=utf8&pool=5&timeout=5000
+    DATABASE_URL: postgresql://yingxuan_devs:yingxuanApp@postgres:5432/myapp?encoding=utf8&pool=5&timeout=5000
     RAILS_MIN_THREADS: 1
     RAILS_MAX_THREADS: 5
     RAILS_ENV: "development"
