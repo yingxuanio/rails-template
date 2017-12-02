@@ -42,8 +42,6 @@ if docker_mode
   # Copy Dockerfile and docker-compose to manage docker containers
   get_remote 'Dockerfile'
   get_remote 'docker-compose.yml'
-  gsub_file 'Dockerfile', /\/app/, "/app/#{app_name}"
-  gsub_file 'docker-compose.yml', /\/app/, "/app/#{app_name}"
 end
 
 # postgresql
@@ -57,20 +55,6 @@ get_remote('config/database.yml.example', 'config/database.yml')
 say 'Applying figaro...'
 gem 'figaro'
 get_remote('config/application.yml.example', 'config/application.yml')
-
-# host = ask("请输入PostgreSQL数据库host地址（无需输入端口）：(localhost)") || "localhost"
-# port = ask("请输入PostgreSQL数据库访问端口：(5432)") || "5432"
-# username = ask("请输入PostgreSQL数据库用户名：(postgres)") || "postgres"
-# password = ask("请输入PostgreSQL数据库密码：(postgres)") || "postgres"
-# gsub_file 'config/application.yml', /@postgres/, "@#{host}"
-# gsub_file 'config/application.yml', /5432/, "#{port}"
-# gsub_file 'config/application.yml', /yingxuan_devs/, "@#{username}"
-# gsub_file 'config/application.yml', /yingxuanApp/, "@#{password}"
-
-# host = ask("请输入Redis数据库host地址（无需输入端口）：(localhost)") || "localhost"
-# port = ask("请输入Redis数据库访问端口：(6379)") || "6379"
-# gsub_file 'config/application.yml', /\/\/redis/, "\/\/#{host}"
-# gsub_file 'config/application.yml', /6379/, "#{port}"
 
 get_remote('config/spring.rb')
 
@@ -196,6 +180,7 @@ get_remote 'ackrc', '.ackrc'
 gsub_file 'Gemfile', /rubygems.org/, "gems.ruby-china.org"
 
 after_bundle do
-  say "Please edit `application.yml` first"
-  say "Build successfully! `cd #{app_name}` and use `docker-compose up` to start your rails app..."
+  command = docker_mode ? "docker-compose up" : "rails s"
+  say "You should edit `application.yml` first."
+  say "Build successfully! `cd #{app_name}` and use `#{command}` to start your Rails app."
 end

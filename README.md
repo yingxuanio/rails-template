@@ -69,7 +69,7 @@ $ rails new myapp -m https://git.io/vbmQA
 #### A 如果你用的是`MacOS`或者`Windows`：
 
 ```
-docker run -it -v "$PWD":/app -w /app ccr.ccs.tencentyun.com/yingxuan/rails-base:1.1.1 \
+docker run -it --rm -v "$PWD":/app -w /app ccr.ccs.tencentyun.com/yingxuan/rails-base:1.1.1 \
   --name myapp bash -c "gem install rails --no-ri --no-rdoc && rails new --skip-bundle myapp -m https://git.io/vbmQA"
 ```
 
@@ -77,8 +77,16 @@ docker run -it -v "$PWD":/app -w /app ccr.ccs.tencentyun.com/yingxuan/rails-base
 
 ```
 docker run -it --rm --user "$(id -u):$(id -g)" \
-  -v "$PWD":/app -w /app ccr.ccs.tencentyun.com/yingxuan/rails-base:1.1.1 gem install rails --no-ri --no-rdoc && rails new --skip-bundle myapp -m https://git.io/vbmQA
+  -v "$PWD":/app -w /app ccr.ccs.tencentyun.com/yingxuan/rails-base:1.1.1 gem install rails --no-ri --no-rdoc && rails new --skip-test-unit --skip-bundle myapp -m https://git.io/vbmQA
 ```
+
+安装好了之后，只需要：
+
+```
+docker-compose up
+```
+
+即可直接开启应用。
 
 ## What we do
 

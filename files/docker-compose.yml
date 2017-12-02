@@ -26,13 +26,6 @@ app:
     - .:/app
   ports:
     - '3000:3000'
-  environment:
-    WEB_CONCURRENCY: 1
-    DATABASE_URL: postgresql://yingxuan_devs:yingxuanApp@postgres:5432/myapp?encoding=utf8&pool=5&timeout=5000
-    RAILS_MIN_THREADS: 1
-    RAILS_MAX_THREADS: 5
-    RAILS_ENV: "development"
-    PORT: 3000
 
 sidekiq:
   build: .
