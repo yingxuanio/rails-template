@@ -8,62 +8,76 @@ It's a best starting for your new rails project.
 
 An example built with rails-template: https://github.com/80percent/rails-template-example
 
-## How to use
+## 正常使用
 
-Install dependencies:
+### 安装Rails的应用依赖
 
-* postgresql
+* 安装`postgresql`数据库
 
-    `$ brew install postgresql`
-
-    Ensure you have already initialized a user with username: `postgres` and password: `postgres`( e.g. `$ createuser -d postgres` )
-
-* rails 5
-
-    Update `ruby` up to 2.2 or higher, and install `rails 5.1`
-
-    `$ ruby -v` ( output should be 2.2.x or 2.3.x or 2.4.x )
-
-    `$ gem sources --add https://gems.ruby-china.org/ --remove https://rubygems.org/` (optional)
-
-    `$ gem install rails`
-
-    `$ rails -v` ( output should be rails 5.1.x )
-
-Then,
-
-1. Add `gems.ruby-china.org` to your bundle mirrors (optional)
-
-    `$ bundle config mirror.https://rubygems.org https://gems.ruby-china.org`
-
-2. Create your own rails app applying `rails-template`
-
-    `$ rails new myapp -m https://raw.github.com/80percent/rails-template/master/composer.rb`
-
-## Using Docker
-
-By using Docker, you don't need to install any apps and configure environment other than Docker itself.
-
-If you need to Create a new app, you should first build a local docker image:
-
-```
-docker build https://github.com/yingxuanio/rails-template.git#master:files -t rails-myapp
+```bash
+$ brew install postgresql
 ```
 
-You can run it to create a new rails app with rails-template composer!
+确保你创建了用户`postgres`，并设置密码为`postgres`( e.g. `$ createuser -d postgres` )
 
-If you are using `OSX/Windows`:
+* 安装 Rails 5
+
+更新 `ruby` 到 2.2 或更高版本，并安装 `rails 5.1`
+
+```
+$ ruby -v
+```
+
+为Gem设置中国镜像，加速Gem的安装和更新速度。
+
+```
+$ gem sources --add https://gems.ruby-china.org/ --remove https://rubygems.org/
+```
+
+```
+$ gem install rails --no-ri --no-rdoc
+$ rails -v
+```
+
+添加 `gems.ruby-china.org` 到默认的 bundler 镜像源配置。
+
+```
+$ bundle config mirror.https://rubygems.org https://gems.ruby-china.org
+```
+
+通过 `rails-template` 创建一个新的Rails应用。
+
+```
+$ rails new myapp -m https://raw.github.com/80percent/rails-template/master/composer.rb`
+
+```
+
+## 使用 Docker
+
+通过使用Docker的方式启动Rails，除了安装Docker本身之外，你什么应用或环境都不需要配置了。
+
+### 安装Docker
+
+> Pending
+
+### 创建新的Rails应用
+
+一个命令就可以直接创建新的Rails应用：
+
+> 你可以将下文中出现的`myapp`替换成你的应用名称
+
+#### A 如果你用的是`MacOS`或者`Windows`：
 
 ```
 docker run -it --rm \
-  -v "$PWD":/app -w /app rails-myapp rails new --skip-bundle myapp -m https://git.io/vbmQA
+  -v "$PWD":/app -w /app ccr.ccs.tencentyun.com/yingxuan/rails-base:1.1.1 gem install rails --no-ri --no-rdoc && rails new --skip-bundle myapp -m https://git.io/vbmQA
 ```
 
-Or using `Ubuntu` or other Linux Distribution:
+#### B 如果你使用的是`Ubuntu`或其他Linux发行版本:
 
 ```
 docker run -it --rm --user "$(id -u):$(id -g)" \
-  -v "$PWD":/app -w /app rails-myapp rails new --skip-bundle myapp -m https://git.io/vbmQA
+  -v "$PWD":/app -w /app ccr.ccs.tencentyun.com/yingxuan/rails-base:1.1.1 gem install rails --no-ri --no-rdoc && rails new --skip-bundle myapp -m https://git.io/vbmQA
 ```
 
 ## What we do

@@ -1,5 +1,5 @@
 # From base image
-FROM ccr.ccs.tencentyun.com/yingxuan/rails-base:1.1.0
+FROM ccr.ccs.tencentyun.com/yingxuan/rails-base:1.1.1
 
 ARG APP_PATH='/app'
 ENV PORT=3000
@@ -9,6 +9,7 @@ RUN mkdir $APP_PATH
 WORKDIR $APP_PATH
 COPY . ./
 
+# Install Yarn to manage vendor assets
 RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
 RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" > /etc/apt/sources.list.d/yarn.list
 

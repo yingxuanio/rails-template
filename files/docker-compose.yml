@@ -9,17 +9,26 @@ postgres:
     # You need to modify this to a local valid path.
     - /data/pq_db/data:/var/lib/postgresql/data
 
+redis:
+  image: redis:3.0.5
+  ports:
+    - '6379:6379'
+  volumes:
+    - ~/projects/docker-data/redis:/var/lib/redis
+
 app:
   build: .
   command: bash -c "rm -f tmp/pids/server.pid && bundle exec puma -C 'config/puma.rb'"
   links:
     - postgres
+    - redis
   volumes:
     - .:/app
   ports:
     - '3000:3000'
   environment:
     WEB_CONCURRENCY: 1
+    DATABASE_URL: postgresql://yingxuan_devs:yingxuanApp@postgres:5432/drkiq?encoding=utf8&pool=5&timeout=5000
     RAILS_MIN_THREADS: 1
     RAILS_MAX_THREADS: 5
     RAILS_ENV: "development"
@@ -30,5 +39,6 @@ sidekiq:
   command: bundle exec sidekiq -C config/sidekiq.yml
   links:
     - postgres
+    - redis
   volumes:
     - .:/app

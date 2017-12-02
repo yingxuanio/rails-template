@@ -20,6 +20,9 @@ remove_comment_of_gem
 # gitignore
 get_remote('gitignore', '.gitignore')
 
+environment "config.cache_store = :redis_store, ENV['CACHE_URL'],{ namespace: '#{app_name}'::cache' }"
+environment 'config.active_job.queue_adapter = :sidekiq'
+
 # postgresql
 say 'Applying postgresql...'
 remove_gem('sqlite3')
@@ -154,12 +157,9 @@ EOF
 end
 
 say 'Applying rspec test framework...'
-gem_group :development do
-  gem 'rails_apps_testing'
-end
 gem_group :development, :test do
   gem 'rspec-rails'
-  gem 'factory_girl_rails'
+  gem 'factory_bot_rails'
 end
 gem_group :test do
   gem 'capybara'
@@ -180,12 +180,9 @@ gsub_file 'README.md', /myapp/, "#{app_name}"
 # `ack` is a really quick tool for searching code
 get_remote 'ackrc', '.ackrc'
 
-after_bundle do
-  say 'Done! init `git` and `database`...'
-  git :init
-  git add: '.'
-  git commit: '-m "init rails"'
+gsub_file 'Gemfile', /rubygems.org/, "gems.ruby-china.org"
 
-  rake 'db:create'
-  say "Build successfully! `cd #{app_name}` and use `rails s` to start your rails app..."
+after_bundle do
+  git :init
+  say "Build successfully! `cd #{app_name}` and use `docker-compose up` to start your rails app..."
 end
