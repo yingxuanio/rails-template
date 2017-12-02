@@ -1,5 +1,5 @@
 # From base image
-FROM ccr.ccs.tencentyun.com/yingxuan/rails-base:1.0.1
+FROM ccr.ccs.tencentyun.com/yingxuan/rails-base:1.1.0
 
 ARG APP_PATH='/app'
 ENV PORT=3000
@@ -9,8 +9,9 @@ RUN mkdir $APP_PATH
 WORKDIR $APP_PATH
 COPY . ./
 
-RUN curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
-RUN apt-get install nodejs yarn
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+
 RUN bundle install --jobs 20 --retry 5
 RUN yarn install
 

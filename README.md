@@ -52,6 +52,7 @@ docker build https://github.com/yingxuanio/rails-template.git#master:files -t ra
 
 You can run it to create a new rails app with rails-template composer!
 
+```
 # OSX/Windows users will want to remove --­­user "$(id -­u):$(id -­g)"
 docker run -it --rm --user "$(id -u):$(id -g)" \
   -v "$PWD":/app -w /app rails-myapp rails new --skip-bundle myapp -m https://raw.githubusercontent.com/yingxuanio/rails-template/master/composer.rb
