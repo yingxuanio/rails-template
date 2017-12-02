@@ -16,7 +16,7 @@ def get_remote(src, dest = nil)
   get(remote_file, dest)
 end
 
-docker_mode = yes?("是否启用『Docker模式』创建Rails项目？否则将使用『本地模式』。")
+docker_mode = yes?("是否启用『Docker模式』创建Rails项目？否则将使用『本地模式』。(y/n)")
 if docker_mode
   say "启用Docker模式进行安装……"
 else
@@ -57,11 +57,11 @@ gem 'figaro'
 get_remote('config/application.yml.example', 'config/application.yml')
 
 if docker_mode
-  dir = ask("Specify the location to store database data: (e.g: /data/#{app_name}/db or /home/username/data/#{app_name}/db)")
+  dir = ask("Specify the location to store database data: (e.g: /data/#{app_name}/db or ~/projects/docker-data/#{app_name}/db)")
   if dir.blank?
     say "The location can't be Blank! Will set to '~/projects/docker-data', please remember to modify later!"
   else
-    gsub_file 'config/docker-compose.yml', /~\/projects\/docker-data/, dir
+    gsub_file 'config/docker-compose.yml', /~\/projects\/docker-data/, "#{dir}"
   end
 else
   # host = ask("请输入PostgreSQL数据库host地址（无需输入端口）：(localhost)") || "localhost"

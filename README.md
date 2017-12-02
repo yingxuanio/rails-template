@@ -48,7 +48,7 @@ $ bundle config mirror.https://rubygems.org https://gems.ruby-china.org
 通过 `rails-template` 创建一个新的Rails应用。
 
 ```
-$ rails new myapp -m https://raw.github.com/80percent/rails-template/master/composer.rb`
+$ rails new myapp -m https://git.io/vbmQA
 
 ```
 
