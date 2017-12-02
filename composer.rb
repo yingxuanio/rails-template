@@ -77,8 +77,11 @@ inject_into_file 'app/assets/javascripts/application.js', after: "//= require jq
 
 say 'Applying simple_form...'
 gem 'simple_form', '~> 3.5.0'
-after_bundle do
-  generate 'simple_form:install', '--bootstrap'
+
+if !docker_mode
+  after_bundle do
+    generate 'simple_form:install', '--bootstrap'
+  end
 end
 
 say 'Applying font-awesome & slim & high_voltage...'
@@ -115,9 +118,6 @@ get_remote('config/initializers/status_page.rb')
 
 say "Applying browser_warrior..."
 gem 'browser_warrior'
-after_bundle do
-  generate 'browser_warrior:install'
-end
 
 say 'Applying redis & sidekiq...'
 gem 'redis-namespace'
@@ -128,9 +128,12 @@ get_remote('config/routes.rb')
 say 'Applying kaminari & rails-i18n...'
 gem 'kaminari', '~> 1.0.1'
 gem 'rails-i18n', '~> 5.0.3'
-after_bundle do
-  generate 'kaminari:config'
-  generate 'kaminari:views', 'bootstrap3'
+
+if !docker_mode
+  after_bundle do
+    generate 'kaminari:config'
+    generate 'kaminari:views', 'bootstrap3'
+  end
 end
 
 say 'Applying mina & its plugins...'
