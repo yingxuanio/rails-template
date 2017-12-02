@@ -10,7 +10,7 @@ end
 
 def get_remote(src, dest = nil)
   dest ||= src
-  repo = 'https://raw.github.com/80percent/rails-template/master/files/'
+  repo = 'https://raw.githubusercontent.com/yingxuanio/rails-template/master/files/'
   remote_file = repo + src
   remove_file dest
   get(remote_file, dest)
@@ -170,6 +170,10 @@ end
 after_bundle do
   generate 'testing:configure', 'rspec --force'
 end
+
+# Copy Dockerfile and docker-compose to manage docker containers
+get_remote 'Dockerfile'
+get_remote 'docker-compose.yml'
 
 get_remote 'README.md'
 gsub_file 'README.md', /myapp/, "#{app_name}"

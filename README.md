@@ -40,6 +40,23 @@ Then,
 
     `$ rails new myapp -m https://raw.github.com/80percent/rails-template/master/composer.rb`
 
+## Using Docker
+
+By using Docker, you don't need to install any apps and configure environment other than Docker itself.
+
+If you need to Create a new app, you should first build a local docker image:
+
+```
+docker build https://github.com/yingxuanio/rails-template.git#master:files -t rails-myapp
+```
+
+You can run it to create a new rails app with rails-template composer!
+
+# OSX/Windows users will want to remove --­­user "$(id -­u):$(id -­g)"
+docker run -it --rm --user "$(id -u):$(id -g)" \
+  -v "$PWD":/app -w /app rails-myapp rails new --skip-bundle myapp -m https://raw.githubusercontent.com/yingxuanio/rails-template/master/composer.rb
+```
+
 ## What we do
 
 `rails-template` apply lots of good components for you to make development damn quick.

@@ -1,0 +1,34 @@
+postgres:
+  image: postgres:9.6.0
+  environment:
+    POSTGRES_USER: yingxuan_devs
+    POSTGRES_PASSWORD: yingxuanApp
+  ports:
+    - '5432:5432'
+  volumes:
+    # You need to modify this to a local valid path.
+    - /data/pq_db/data:/var/lib/postgresql/data
+
+app:
+  build: .
+  command: bash -c "rm -f tmp/pids/server.pid && bundle exec puma -C 'config/puma.rb'"
+  links:
+    - postgres
+  volumes:
+    - .:/app
+  ports:
+    - '3000:3000'
+  environment:
+    WEB_CONCURRENCY: 1
+    RAILS_MIN_THREADS: 1
+    RAILS_MAX_THREADS: 5
+    RAILS_ENV: "development"
+    PORT: 3000
+
+sidekiq:
+  build: .
+  command: bundle exec sidekiq -C config/sidekiq.yml
+  links:
+    - postgres
+  volumes:
+    - .:/app

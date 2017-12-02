@@ -1,29 +1,11 @@
 development:
-  adapter:  postgresql
-  host:     localhost
-  encoding: unicode
-  database: myapp_development
-  pool:     5
-  username: postgres
-  password: postgres
-  template: template0
+  url: <%= ENV['DATABASE_URL'].gsub('?', '_development?') %>
 
 test:
-  adapter:  postgresql
-  host:     localhost
-  encoding: unicode
-  database: myapp_test
-  pool:     5
-  username: postgres
-  password: postgres
-  template: template0
+  url: <%= ENV['DATABASE_URL'].gsub('?', '_test?') %>
+
+staging:
+  url: <%= ENV['DATABASE_URL'].gsub('?', '_staging?') %>
 
 production:
-  adapter:  postgresql
-  host:     localhost
-  encoding: unicode
-  database: myapp_production
-  pool:     50
-  username: postgres
-  password: postgres
-  template: template0
+  url: <%= ENV['DATABASE_URL'].gsub('?', '_production?') %>

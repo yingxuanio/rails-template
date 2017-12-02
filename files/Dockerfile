@@ -9,7 +9,7 @@ RUN mkdir $APP_PATH
 WORKDIR $APP_PATH
 COPY . ./
 
-curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
+RUN curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
 RUN apt-get install nodejs yarn
 RUN bundle install --jobs 20 --retry 5
 RUN yarn install
