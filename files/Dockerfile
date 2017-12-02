@@ -2,6 +2,7 @@
 FROM ccr.ccs.tencentyun.com/yingxuan/rails-base:1.1.1
 
 ARG APP_PATH='/app'
+ENV RAILS_ENV='development'
 
 RUN mkdir $APP_PATH
 WORKDIR $APP_PATH

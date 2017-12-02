@@ -78,10 +78,8 @@ inject_into_file 'app/assets/javascripts/application.js', after: "//= require jq
 say 'Applying simple_form...'
 gem 'simple_form', '~> 3.5.0'
 
-if !docker_mode
-  after_bundle do
-    generate 'simple_form:install', '--bootstrap'
-  end
+after_bundle do
+  generate 'simple_form:install', '--bootstrap'
 end
 
 say 'Applying font-awesome & slim & high_voltage...'
@@ -129,11 +127,9 @@ say 'Applying kaminari & rails-i18n...'
 gem 'kaminari', '~> 1.0.1'
 gem 'rails-i18n', '~> 5.0.3'
 
-if !docker_mode
-  after_bundle do
-    generate 'kaminari:config'
-    generate 'kaminari:views', 'bootstrap3'
-  end
+after_bundle do
+  generate 'kaminari:config'
+  generate 'kaminari:views', 'bootstrap3'
 end
 
 say 'Applying mina & its plugins...'

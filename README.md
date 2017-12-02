@@ -70,14 +70,14 @@ $ rails new myapp -m https://git.io/vbmQA
 
 ```
 $ docker run -it --rm -v "$PWD":/app -w /app ccr.ccs.tencentyun.com/yingxuan/rails-base:1.1.1 \
-  bash -c "gem install rails --no-ri --no-rdoc && rails new myapp --skip-test-unit --skip-bundle -m https://git.io/vbmQA"
+  bash -c "gem install rails --no-ri --no-rdoc && rails new myapp -T -m https://git.io/vbmQA"
 ```
 
 #### B 如果你使用的是`Ubuntu`或其他Linux发行版本:
 
 ```
 $ docker run -it --rm --user "$(id -u):$(id -g)" -v "$PWD":/app -w /app ccr.ccs.tencentyun.com/yingxuan/rails-base:1.1.1 \
-  bash -c "gem install rails --no-ri --no-rdoc && rails new myapp -T --skip-bundle -m https://git.io/vbmQA"
+  bash -c "gem install rails --no-ri --no-rdoc && rails new myapp -T -m https://git.io/vbmQA"
 ```
 
 安装好了之后，只需要：
@@ -87,6 +87,12 @@ $ cd myapp && docker-compose up
 ```
 
 即可直接开启应用。
+
+## 生产环境（Production）
+
+```
+$ docker-compose run app bash -c "bundle install --deployment && bundle exec rake assets:precompile"
+```
 
 ## What we do
 
