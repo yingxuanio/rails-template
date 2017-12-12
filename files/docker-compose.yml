@@ -1,33 +1,39 @@
-postgres:
-  image: postgres:9.6.0
-  environment:
-    POSTGRES_USER: yingxuan_devs
-    POSTGRES_PASSWORD: yingxuanApp
-  volumes:
-    # You need to modify this to a local valid path.
-    - ~/projects/docker-data/postresql:/var/lib/postgresql
+version: "3"
 
-redis:
-  image: redis:3.0.5
-  volumes:
-    - ~/projects/docker-data/redis:/var/lib/redis
+services:
+  postgres:
+    image: postgres:9.6.0
+    environment:
+      POSTGRES_USER: yingxuan_devs
+      POSTGRES_DB: myapp
+      POSTGRES_PASSWORD: yingxuanApp
+    volumes:
+      - db-data:/var/lib/postgresql
 
-app:
-  build: .
-  command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -b 0.0.0.0"
-  links:
-    - postgres
-    - redis
-  volumes:
-    - .:/app
-  ports:
-    - '3000:3000'
+  redis:
+    image: redis:3.0.5
+    volumes:
+      - db-data:/var/lib/redis
 
-sidekiq:
-  build: .
-  command: bundle exec sidekiq -C config/sidekiq.yml
-  links:
-    - postgres
-    - redis
-  volumes:
-    - .:/app
+  app:
+    build: .
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -b 0.0.0.0"
+    depends_on:
+      - postgres
+      - redis
+    volumes:
+      - .:/app
+    ports:
+      - '3000:3000'
+
+  sidekiq:
+    build: .
+    command: bundle exec sidekiq -C config/sidekiq.yml
+    depends_on:
+      - postgres
+      - redis
+    volumes:
+      - .:/app
+
+volumes:
+  db-data:

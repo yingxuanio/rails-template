@@ -1,19 +1,20 @@
 # From base image
 FROM ccr.ccs.tencentyun.com/yingxuan/rails-base:1.1.1
 
-ENV APP_PATH '/app'
-ENV RAILS_ENV 'development'
+ARG APP_PATH='/app'
+ENV RAILS_ENV='production'
 
 # Install Yarn to manage vendor assets
 RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
 RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" > /etc/apt/sources.list.d/yarn.list
 RUN apt-get update -qq && apt-get install -y yarn
 
-VOLUME $APP_PATH
-
+RUN mkdir $APP_PATH
 WORKDIR $APP_PATH
+
 COPY . ./
-RUN bundle install --jobs 20 --retry 5
+RUN bundle install --jobs 20 --retry 5 --deployment
+RUN bundle exec rake assets:precompile RAILS_ENV=production
 RUN yarn install
 
 EXPOSE 3000

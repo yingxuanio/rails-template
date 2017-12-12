@@ -80,6 +80,11 @@ $ docker run -it --rm --user "$(id -u):$(id -g)" -v "$PWD":/app -w /app ccr.ccs.
   bash -c "gem install rails --no-ri --no-rdoc && rails new myapp -T -m https://git.io/vbmQA"
 ```
 
+> 这个命令做了什么？
+-  `-it`指的是进入交互模式，由于rails新建的模板中有几处需要你输入结果的地方；
+- `--rm`则是指在运行相应的命令后删除容器；
+- `-v "$PWD":/app`将当前目录映射到docker容器的`/app`目录，由于我们的命令在该目录下执行，最终`rails new`所新建的目录将会出现在当前目录。
+
 安装好了之后，只需要：
 
 ```

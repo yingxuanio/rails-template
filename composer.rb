@@ -42,6 +42,7 @@ if docker_mode
   # Copy Dockerfile and docker-compose to manage docker containers
   get_remote 'Dockerfile'
   get_remote 'docker-compose.yml'
+  gsub_file 'docker-compose.yml', /myapp/, "#{app_name}"
 end
 
 # postgresql
@@ -55,6 +56,7 @@ get_remote('config/database.yml.example', 'config/database.yml')
 say 'Applying figaro...'
 gem 'figaro'
 get_remote('config/application.yml.example', 'config/application.yml')
+gsub_file 'config/application.yml', /myapp/, "#{app_name}"
 
 get_remote('config/spring.rb')
 
