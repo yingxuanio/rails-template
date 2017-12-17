@@ -35,14 +35,16 @@ environment 'config.generators { |g| g.test_framework :rspec }'
 environment "config.time_zone = 'Beijing'"
 environment "config.i18n.available_locales = [:en, :'zh-CN']"
 environment "config.i18n.default_locale = :'zh-CN'"
-environment "config.lograge.enabled = true"
 environment "config.cache_store = :redis_store, ENV['CACHE_URL'],{ namespace: '#{app_name}::cache' }"
 
 if docker_mode
   # Copy Dockerfile and docker-compose to manage docker containers
   get_remote 'Dockerfile'
+  get_remote 'Dockerfile.prod'
   get_remote 'docker-compose.yml'
+  get_remote 'docker-compose.prod.yml'
   gsub_file 'docker-compose.yml', /myapp/, "#{app_name}"
+  gsub_file 'docker-compose.prod.yml', /myapp/, "#{app_name}"
 end
 
 # postgresql
@@ -120,6 +122,7 @@ say "Applying browser_warrior..."
 gem 'browser_warrior'
 
 say 'Applying redis & sidekiq...'
+gem 'redis-rails'
 gem 'redis-namespace'
 gem 'sidekiq'
 get_remote('config/initializers/sidekiq.rb')
@@ -135,11 +138,15 @@ after_bundle do
 end
 
 say 'Applying mina & its plugins...'
-gem 'mina', '~> 1.2.2', require: false
-gem 'mina-puma', '~> 1.1.0', require: false
-gem 'mina-multistage', '~> 1.0.3', require: false
-gem 'mina-sidekiq', '~> 1.0.3', require: false
-gem 'mina-logs', '~> 1.1.0', require: false
+group :development do
+  gem 'mina', '~> 1.2.2', require: false
+  gem 'mina-puma', '~> 1.1.0', require: false
+  gem 'mina-multistage', '~> 1.0.3', require: false
+  gem 'mina-sidekiq', '~> 1.0.3', require: false
+  gem 'mina-logs', '~> 1.1.0', require: false
+end
+
+say 'Applying basic application config...'
 get_remote('config/deploy.rb')
 get_remote('config/puma.rb')
 gsub_file 'config/puma.rb', /\/data\/www\/myapp\/shared/, "/data/www/#{app_name}/shared"
@@ -157,9 +164,6 @@ gsub_file 'config/monit.conf.example', /myapp/, "#{app_name}"
 
 get_remote('config/backup.rb.example')
 gsub_file 'config/backup.rb.example', /myapp/, "#{app_name}"
-
-say 'Applying lograge & basic application config...'
-gem 'lograge'
 
 say 'Applying rspec test framework...'
 gem_group :development, :test do

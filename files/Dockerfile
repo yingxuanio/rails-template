@@ -1,4 +1,3 @@
-# From base image
 FROM ccr.ccs.tencentyun.com/yingxuan/rails-base:1.1.1
 
 ENV APP_PATH '/app'
@@ -10,11 +9,16 @@ RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" > /etc/apt/sources.lis
 RUN apt-get update -qq && apt-get install -y yarn
 
 VOLUME $APP_PATH
-
 WORKDIR $APP_PATH
-COPY . ./
+
+COPY Gemfile ./Gemfile
+COPY Gemfile.lock ./Gemfile.lock
 RUN bundle install --jobs 20 --retry 5
+
+COPY package.json ./package.json
 RUN yarn install
+
+COPY . ./
 
 EXPOSE 3000
 CMD ["bundle", "exec", "rails", "s", "-b", "0.0.0.0"]

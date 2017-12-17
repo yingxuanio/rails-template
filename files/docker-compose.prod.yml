@@ -6,7 +6,7 @@ services:
     environment:
       POSTGRES_USER: yingxuan_devs
       POSTGRES_PASSWORD: yingxuanApp
-      POSTGRES_DB: myapp_development
+      POSTGRES_DB: myapp_production
     volumes:
       - db-data:/var/lib/postgresql
 
@@ -16,7 +16,9 @@ services:
       - db-data:/var/lib/redis
 
   app:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
     command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -b 0.0.0.0"
     depends_on:
       - postgres
@@ -27,7 +29,9 @@ services:
       - '3000:3000'
 
   sidekiq:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
     command: bundle exec sidekiq -C config/sidekiq.yml
     depends_on:
       - postgres

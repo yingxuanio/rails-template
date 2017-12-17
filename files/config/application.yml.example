@@ -16,7 +16,6 @@ DATABASE_URL: "postgresql://yingxuan_devs:yingxuanApp@postgres:5432/myapp?encodi
 WEB_CONCURRENCY: '1'
 RAILS_MIN_THREADS: '1'
 RAILS_MAX_THREADS: '5'
-RAILS_ENV: 'development'
 PORT: '3000'
 
 CACHE_URL: "redis://redis:6379/0"
