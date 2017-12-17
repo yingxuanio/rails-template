@@ -138,7 +138,7 @@ after_bundle do
 end
 
 say 'Applying mina & its plugins...'
-group :development do
+gem_group :development do
   gem 'mina', '~> 1.2.2', require: false
   gem 'mina-puma', '~> 1.1.0', require: false
   gem 'mina-multistage', '~> 1.0.3', require: false
