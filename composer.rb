@@ -35,7 +35,10 @@ environment 'config.generators { |g| g.test_framework :rspec }'
 environment "config.time_zone = 'Beijing'"
 environment "config.i18n.available_locales = [:en, :'zh-CN']"
 environment "config.i18n.default_locale = :'zh-CN'"
-environment "config.cache_store = :redis_store, ENV['CACHE_URL'],{ namespace: '#{app_name}::cache' }"
+
+if docker_mode
+  environment "config.cache_store = :redis_store, ENV['CACHE_URL'],{ namespace: '#{app_name}::cache' }"
+end
 
 if docker_mode
   # Copy Dockerfile and docker-compose to manage docker containers
@@ -49,7 +52,9 @@ end
 
 # postgresql
 say 'Applying postgresql...'
-remove_gem('sqlite3')
+if docker_mode
+  remove_gem('sqlite3')
+end
 gem 'pg'
 get_remote('config/database.yml.example', 'config/database.yml')
 
@@ -90,19 +95,10 @@ say 'Applying font-awesome & slim & high_voltage...'
 gem 'font-awesome-sass'
 gem 'slim-rails'
 gem 'high_voltage', '~> 3.0.0'
-get_remote('home_controller.rb', 'app/controllers/home_controller.rb')
-get_remote('index.html.slim', 'app/views/home/index.html.slim')
-get_remote('about.html.slim', 'app/views/pages/about.html.slim')
 remove_file('app/views/layouts/application.html.erb')
 get_remote('application.html.slim', 'app/views/layouts/application.html.slim')
 gsub_file 'app/views/layouts/application.html.slim', /myapp/, "#{app_name}"
 get_remote('favicon.ico', 'app/assets/images/favicon.ico')
-
-say 'Applying action cable config...'
-inject_into_file 'config/environments/production.rb', after: "# Mount Action Cable outside main process or domain\n" do <<-EOF
-  config.action_cable.allowed_request_origins = [ "\#{ENV['PROTOCOL']}://\#{ENV['DOMAIN']}" ]
-EOF
-end
 
 # initialize files
 # uploader directory
@@ -126,6 +122,7 @@ gem 'redis-rails'
 gem 'redis-namespace'
 gem 'sidekiq'
 get_remote('config/initializers/sidekiq.rb')
+get_remote('config/sidekiq.yml')
 get_remote('config/routes.rb')
 
 say 'Applying kaminari & rails-i18n...'
@@ -135,6 +132,21 @@ gem 'rails-i18n', '~> 5.0.3'
 after_bundle do
   generate 'kaminari:config'
   generate 'kaminari:views', 'bootstrap3'
+end
+
+use_activeadmin = yes?("是否安装『ActiveAdmin』？将安装active_admin, draper, devise及active_admin_setting (y/n)")
+if use_activeadmin
+  gem "activeadmin"
+  gem "activeadmin_addons"
+  gem "devise"
+  gem 'devise-i18n'
+  gem 'draper'
+  gem "activeadmin_settings_cached"
+  after_bundle do
+    generate "active_admin:install"
+    generate "settings:install"
+    generate "active_admin:settings Setting"
+  end
 end
 
 say 'Applying mina & its plugins...'
@@ -147,7 +159,12 @@ gem_group :development do
 end
 
 say 'Applying basic application config...'
-get_remote('config/deploy.rb')
+if docker_mode
+  get_remote('config/deploy.docker.rb', 'config/deploy.rb')
+else
+  get_remote('config/deploy.rb')
+end
+gsub_file 'config/deploy.rb', /\/data\/www\/myapp/, "/data/www/#{app_name}"
 get_remote('config/puma.rb')
 gsub_file 'config/puma.rb', /\/data\/www\/myapp\/shared/, "/data/www/#{app_name}/shared"
 get_remote('config/deploy/production.rb')

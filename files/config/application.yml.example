@@ -12,6 +12,9 @@ UPYUN_BUCKET: ''
 UPYUN_BUCKET_HOST: ''
 
 DATABASE_URL: "postgresql://yingxuan_devs:yingxuanApp@postgres:5432/myapp?encoding=utf8&pool=5&timeout=5000"
+DATABASE_NAME: ""
+DATABASE_USERNAME: ""
+DATABASE_PASSWORD: ""
 
 WEB_CONCURRENCY: '1'
 RAILS_MIN_THREADS: '1'

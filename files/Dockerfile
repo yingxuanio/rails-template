@@ -1,12 +1,7 @@
-FROM ccr.ccs.tencentyun.com/yingxuan/rails-base:1.1.1
+FROM ccr.ccs.tencentyun.com/yingxuan/rails-base:1.2.1
 
 ENV APP_PATH '/app'
 ENV RAILS_ENV 'development'
-
-# Install Yarn to manage vendor assets
-RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
-RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" > /etc/apt/sources.list.d/yarn.list
-RUN apt-get update -qq && apt-get install -y yarn
 
 VOLUME $APP_PATH
 WORKDIR $APP_PATH
@@ -21,7 +16,7 @@ RUN yarn install
 COPY . ./
 
 EXPOSE 3000
-CMD ["bundle", "exec", "rails", "s", "-b", "0.0.0.0"]
+CMD ["bash"]
 
 # Metadata
 LABEL org.label-schema.vendor="Ivan@Yingxuan" \

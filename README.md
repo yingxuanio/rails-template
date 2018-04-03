@@ -1,18 +1,16 @@
 # rails-template
 
-**rails-template has supported the newest rails( 5.1 ) setup**
+帮助快速初始化搭建一个具备现代架构、常见Gem集成的Rails应用。
 
-A best & newest & fastest rails template for chinese senior rails developer.
+## 方式一：正常使用
 
-It's a best starting for your new rails project.
-
-An example built with rails-template: https://github.com/80percent/rails-template-example
-
-## 正常使用
+正常使用指的是在本地环境下运行Rails，需要准备好Ruby环境、Rails及PG数据库等Rails依赖的环境软件，否则将无法正常运行。
 
 ### 安装Rails的应用依赖
 
-* 安装`postgresql`数据库
+以下是一个简要的安装教程：
+
+#### 安装`postgresql`数据库
 
 ```bash
 $ brew install postgresql
@@ -20,7 +18,7 @@ $ brew install postgresql
 
 确保你创建了用户`postgres`，并设置密码为`postgres`( e.g. `$ createuser -d postgres` )
 
-* 安装 Rails 5
+#### 安装 Rails 5
 
 更新 `ruby` 到 2.2 或更高版本，并安装 `rails 5.1`
 
@@ -45,6 +43,8 @@ $ rails -v
 $ bundle config mirror.https://rubygems.org https://gems.ruby-china.org
 ```
 
+### 开始使用
+
 通过 `rails-template` 创建一个新的Rails应用。
 
 ```
@@ -52,7 +52,7 @@ $ rails new myapp -m https://git.io/vbmQA
 
 ```
 
-## 使用 Docker
+## 方式二：使用 Docker
 
 通过使用Docker的方式启动Rails，除了安装Docker本身之外，你什么应用或环境都不需要配置了。
 
@@ -93,29 +93,27 @@ $ cd myapp && docker-compose up
 
 即可直接开启应用。
 
-## 生产环境（Production）
+### 在生产环境（Production）运行
+
+通过rails-template生成的项目，自带了用于部署生产环境使用的docker配置文件，可以一键以应用的Production配置运行。
 
 ```
 $ docker-compose run app bash -c "bundle install --deployment && bundle exec rake assets:precompile"
 ```
 
-## What we do
+## 创建的Rails所包含的内容：
 
-`rails-template` apply lots of good components for you to make development damn quick.
+1. 使用 `Ruby on Rails 5`, `ActionCable` 和 `Turbolinks` 默认开启。
 
-1. we use `Ruby on Rails 5`, `ActionCable` and `Turbolinks` features are opened by default.
+2. `Bootstrap3` 和 `font-awesome` 集成在内。
 
-2. `Bootstrap3` and `font-awesome` are integrated to make your products UI easily, it aslo has some example pages for you to quickly start.
+3. `carriewave` 和 `carriewave-upyun` 集成在内。
 
-3. `carriewave` and `carriewave-upyun` are integrated.
+4. `mina` 用于自动化部署
 
-4. `mina` and its plugins are the best & simplest deployment tools in the world for rails app.
+5. `slim`, `rspec`, `high_voltage` 等等常见标配级别的Gem已经添加在内。
 
-5. `slim`, `rspec`, `high_voltage` and so on.
-
-Other gems integrated in rails-template are worth learning seriously.
-
-## Integrated mainly technology stack
+## 主要内容物：
 
 * Ruby on Rails 5
 * bootstrap 3

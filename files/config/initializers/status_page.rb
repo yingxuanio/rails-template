@@ -4,6 +4,6 @@ StatusPage.configure do
   # Use service
   self.use :database
   self.use :cache
-  self.use :redis
+  self.use :redis, url: ENV["CACHE_URL"]
   self.use :sidekiq
 end
