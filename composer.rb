@@ -17,6 +17,9 @@ def get_remote(src, dest = nil)
 end
 
 docker_mode = yes?("是否启用『Docker模式』创建Rails项目？否则将使用『正常模式』。(y/n)")
+use_devise = yes?("是否安装『Devise』？将安装devise (y/n)")
+use_activeadmin = yes?("是否安装『ActiveAdmin』？将安装active_admin, draper, devise及active_admin_setting (y/n)")
+
 if docker_mode
   say "启用Docker模式进行安装……"
 else
@@ -140,12 +143,10 @@ after_bundle do
   generate 'kaminari:views', 'bootstrap3'
 end
 
-use_devise = yes?("是否安装『Devise』？将安装devise (y/n)")
 if use_devise
   gem "devise"
   gem 'devise-i18n'
 end
-use_activeadmin = yes?("是否安装『ActiveAdmin』？将安装active_admin, draper, devise及active_admin_setting (y/n)")
 if use_activeadmin
   unless use_devise
     gem "devise"
