@@ -1,25 +1,25 @@
 # Use `rake secret` to generate one key
 SECRET_KEY_BASE: ''
 
+SENTRY_RAVEN_DSN: ""
+
 # domain name used by ActionCable
 DOMAIN: ''
 PROTOCOL: http
 
-# UPYUN set
-UPYUN_USERNAME: ''
-UPYUN_PASSWORD: ''
-UPYUN_BUCKET: ''
-UPYUN_BUCKET_HOST: ''
+# 七牛配置
+QINIU_ACCESS_KEY: ""
+QINIU_SECRET_KEY: ""
+QINIU_BUCKET: ""
+QINIU_BUCKET_DOMAIN: ""
+QINIU_PROTOCOL: "http"
 
-DATABASE_URL: "postgresql://yingxuan_devs:yingxuanApp@postgres:5432/myapp?encoding=utf8&pool=5&timeout=5000"
-DATABASE_NAME: ""
-DATABASE_USERNAME: ""
-DATABASE_PASSWORD: ""
+DATABASE_URL: "postgresql://yingxuan_devs:yingxuanApp@db-server:5432/myapp?encoding=utf8&pool=5&timeout=5000"
 
 WEB_CONCURRENCY: '1'
 RAILS_MIN_THREADS: '1'
 RAILS_MAX_THREADS: '5'
 PORT: '3000'
 
-CACHE_URL: "redis://redis:6379/0"
-JOB_WORKER_URL: "redis://redis:6379/0"
+CACHE_URL: "redis://redis-server:6379/0"
+JOB_WORKER_URL: "redis://redis-server:6379/0"

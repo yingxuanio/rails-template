@@ -1,5 +1,5 @@
 class ImageUploader < CarrierWave::Uploader::Base
-  storage :upyun
+  storage :qiniu
 
   def extension_whitelist
     %w(jpg jpeg gif png)

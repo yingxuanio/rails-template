@@ -1,19 +1,8 @@
 development:
-  adapter: sqlite3
-  database: db/development.sqlite3
-  pool: 5
-  timeout: 5000
+  url: <%= ENV['DATABASE_URL'].gsub('?', '_development?') %>
 
 test:
-  adapter: sqlite3
-  database: db/test.sqlite3
-  pool: 5
-  timeout: 5000
+  url: <%= ENV['DATABASE_URL'].gsub('?', '_test?') %>
 
 production:
-  adapter: postgresql
-  encoding: utf8
-  database: <%= ENV['POSTGRES_DB'] %>
-  pool: 5
-  username: <%= ENV['POSTGRES_USER'] %>
-  password: <%= ENV['POSTGRES_PASSWORD'] %>
+  url: <%= ENV['DATABASE_URL'].gsub('?', '_production?') %>

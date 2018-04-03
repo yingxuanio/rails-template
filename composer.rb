@@ -16,11 +16,11 @@ def get_remote(src, dest = nil)
   get(remote_file, dest)
 end
 
-docker_mode = yes?("是否启用『Docker模式』创建Rails项目？否则将使用『本地模式』。(y/n)")
+docker_mode = yes?("是否启用『Docker模式』创建Rails项目？否则将使用『正常模式』。(y/n)")
 if docker_mode
   say "启用Docker模式进行安装……"
 else
-  say "启用本地模式进行安装……"
+  say "启用正常模式进行安装……"
   say "请确认本地是否已经安装PostgreSQL、redis、NodeJS等依赖，如未安装将有可能失败。"
 end
 
@@ -28,7 +28,7 @@ remove_comment_of_gem
 # gitignore
 get_remote('gitignore', '.gitignore')
 
-say "updating config/applicatoin.rb"
+say "更新 config/applicatoin.rb"
 environment 'config.generators.assets = false'
 environment 'config.generators.helper = false'
 environment 'config.generators { |g| g.test_framework :rspec }'
@@ -62,8 +62,12 @@ get_remote('config/database.yml.example', 'config/database.yml')
 # environment variables set
 say 'Applying figaro...'
 gem 'figaro'
+
+# 下载并更新application.yml
 get_remote('config/application.yml.example', 'config/application.yml')
 gsub_file 'config/application.yml', /myapp/, "#{app_name}"
+gsub_file 'config/application.yml', /db-server/, docker_mode ? "postgres" : "localhost:3000"
+gsub_file 'config/application.yml', /redis-server/, docker_mode ? "redis" : "localhost:3000"
 
 get_remote('config/spring.rb')
 
@@ -105,14 +109,15 @@ get_remote('favicon.ico', 'app/assets/images/favicon.ico')
 # application.yml
 say 'Applying carrierwave & upyun...'
 gem 'carrierwave'
-gem 'carrierwave-upyun'
+gem 'carrierwave-qiniu', '~> 1.1.5'
+gem 'carrierwave-i18n'
 get_remote('config/initializers/carrierwave.rb')
 get_remote('image_uploader.rb', 'app/uploaders/image_uploader.rb')
 
 # initialize files
-say 'Applying status page...'
-gem 'status-page'
-get_remote('config/initializers/status_page.rb')
+# say 'Applying status page...'
+# gem 'status-page'
+# get_remote('config/initializers/status_page.rb')
 
 say "Applying browser_warrior..."
 gem 'browser_warrior'
@@ -126,20 +131,30 @@ get_remote('config/sidekiq.yml')
 get_remote('config/routes.rb')
 
 say 'Applying kaminari & rails-i18n...'
-gem 'kaminari', '~> 1.0.1'
-gem 'rails-i18n', '~> 5.0.3'
+gem 'kaminari'
+gem 'kaminari-i18n'
+gem 'rails-i18n', '~> 5.1'
 
 after_bundle do
   generate 'kaminari:config'
   generate 'kaminari:views', 'bootstrap3'
 end
 
-use_activeadmin = yes?("是否安装『ActiveAdmin』？将安装active_admin, draper, devise及active_admin_setting (y/n)")
-if use_activeadmin
-  gem "activeadmin"
-  gem "activeadmin_addons"
+use_devise = yes?("是否安装『Devise』？将安装devise (y/n)")
+if use_devise
   gem "devise"
   gem 'devise-i18n'
+end
+use_activeadmin = yes?("是否安装『ActiveAdmin』？将安装active_admin, draper, devise及active_admin_setting (y/n)")
+if use_activeadmin
+  unless use_devise
+    gem "devise"
+    gem 'devise-i18n'
+    generate "devise:install"
+    generate "devise:views"
+  end
+  gem "activeadmin"
+  gem "activeadmin_addons"
   gem 'draper'
   gem "activeadmin_settings_cached"
   after_bundle do
@@ -148,6 +163,10 @@ if use_activeadmin
     generate "active_admin:settings Setting"
   end
 end
+
+say '添加Sentry错误监控'
+gem "sentry-raven"
+get_remote('config/initializers/sentry.rb', 'config/initializers/sentry.rb')
 
 say 'Applying mina & its plugins...'
 gem_group :development do
