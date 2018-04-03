@@ -66,8 +66,8 @@ gem 'figaro'
 # 下载并更新application.yml
 get_remote('config/application.yml.example', 'config/application.yml')
 gsub_file 'config/application.yml', /myapp/, "#{app_name}"
-gsub_file 'config/application.yml', /db-server/, docker_mode ? "postgres" : "localhost:3000"
-gsub_file 'config/application.yml', /redis-server/, docker_mode ? "redis" : "localhost:3000"
+gsub_file 'config/application.yml', /db-server/, docker_mode ? "postgres" : "localhost"
+gsub_file 'config/application.yml', /redis-server/, docker_mode ? "redis" : "localhost"
 
 get_remote('config/spring.rb')
 
